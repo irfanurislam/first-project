@@ -2,7 +2,9 @@ import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import { StudentRoutes } from "./app/module/student/student.route";
 const app: Application = express();
-
+// NODE_ENV=development
+//PORT=5000
+//DATABASE_URL = mongodb+srv://admin_um:aqpFcxXOJvBOPJP1@cluster0.psezczp.mongodb.net/first-project?retryWrites=true&w=majority
 // parser
 app.use(express.json());
 app.use(cors());

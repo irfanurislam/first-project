@@ -58,10 +58,10 @@ const getSingleStudents = async (req: Request, res:Response) =>{
       message: "student is created",
       data: result,
     });
-  } catch (error) {
+  } catch (error:any) {
     res.status(500).json({
       success: false,
-      message: "student is worng error",
+      message: error.message || "student is worng error",
       error: error,
     });
   }

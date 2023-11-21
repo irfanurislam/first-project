@@ -2,10 +2,12 @@ import { Schema, model, connect } from "mongoose";
 import validator from 'validator';
 
 import {
-  Guardian,
-  LocalGuardian,
+  TGuardian,
+  TLocalGuardian,
   UserName,
-  Student,
+  TStudent,
+  StudentModel,
+  StudentMethods,
 } from "./student/student.interface";
 
 const userSchema = new Schema<UserName>({
@@ -37,7 +39,7 @@ const userSchema = new Schema<UserName>({
   },
 });
 
-const guardianSchema = new Schema<Guardian>({
+const guardianSchema = new Schema<TGuardian>({
   fatherName: {
     type: String,
     required: [true,"first name lage lagbe lagbei"],
@@ -64,7 +66,7 @@ const guardianSchema = new Schema<Guardian>({
   },
 });
 
-const localGuardianSchema = new Schema<LocalGuardian>({
+const localGuardianSchema = new Schema<TLocalGuardian>({
   name: {
     type: String,
     required: true,
@@ -83,7 +85,7 @@ const localGuardianSchema = new Schema<LocalGuardian>({
   },
 });
 
-const studentSchema = new Schema<Student>({
+const studentSchema = new Schema<TStudent, StudentModel, StudentMethods>({
   id: { type: String , required:true, unique:true},
   name: userSchema,
   gender:{
@@ -147,4 +149,10 @@ const studentSchema = new Schema<Student>({
   },
 });
 
-export const StudentModel = model<Student>("student", studentSchema);
+studentSchema.methods.isUserExists = async function(id:string) {
+  const existingUser = await Student.findOne({id});
+
+  return existingUser
+}
+
+export const Student = model<TStudent, StudentModel>("student", studentSchema);

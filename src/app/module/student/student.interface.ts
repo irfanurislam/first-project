@@ -1,6 +1,6 @@
-import { Schema, model, connect } from "mongoose";
+import { Schema, model, connect, Model } from "mongoose";
 
-export type Guardian = {
+export type TGuardian = {
   fatherName: string;
   fatherOccupation: string;
   fatherContactNo: string;
@@ -15,14 +15,14 @@ export type UserName = {
   lastName: string;
 };
 
-export type LocalGuardian = {
+export type TLocalGuardian = {
   name: string;
   occupation: string;
   contactNo: string;
   address: string;
 };
 
-export type Student = {
+export type TStudent = {
   id: string;
   name: UserName;
   gender?: "male" | "female" | 'other';
@@ -33,8 +33,14 @@ export type Student = {
   bloodGroup?: "A" | "B" | "AB" | "O";
   presentAddress: string;
   permanentAddress: string;
-  guardian: Guardian;
-  localGuardian: LocalGuardian;
+  guardian: TGuardian;
+  localGuardian: TLocalGuardian;
   profileImage?: string;
   isActive: "active" | "blocked";
 };
+
+
+export type StudentMethods = {
+  isUserExists(id:string) : Promise<TStudent | null>
+};
+export type StudentModel = Model<TStudent, Record<string, never>, StudentMethods>;

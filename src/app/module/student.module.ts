@@ -151,12 +151,19 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum:["active", "blocked"],
     default:'active'
   },
-  isdDeleted:{
-    type:boolean,
+  isDeleted:{
+    type: Boolean,
     default: false
+  }
+},{
+  toJSON:{
+    virtuals:true
   }
 });
 
+studentSchema.virtual('fullname').get(function() {
+  return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`
+})
 
 studentSchema.pre('save', async function(next){
   const user = this

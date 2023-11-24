@@ -38,7 +38,7 @@ export type TStudent = {
   localGuardian: TLocalGuardian;
   profileImage?: string;
   isActive: "active" | "blocked";
-  isdDeleted: boolean;
+  isDeleted: boolean;
 };
 
 // for creating static

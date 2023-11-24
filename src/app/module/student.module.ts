@@ -1,6 +1,6 @@
 import { Schema, model, connect } from "mongoose";
 import validator from 'validator';
-
+import config from "../config";
 import {
   TGuardian,
   TLocalGuardian,
@@ -9,6 +9,9 @@ import {
   StudentModel,
   
 } from "./student/student.interface";
+import bcrypt from 'bcrypt';
+import { boolean } from "joi";
+// import { config } from "dotenv";
 
 const userSchema = new Schema<UserName>({
   firstName: {
@@ -87,6 +90,7 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String , required:true, unique:true},
+  password: { type: String , required:true, maxlength:[20,'password cannot length 20 ']},
   name: userSchema,
   gender:{
     type: String,
@@ -147,7 +151,43 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     enum:["active", "blocked"],
     default:'active'
   },
+  isdDeleted:{
+    type:boolean,
+    default: false
+  }
 });
+
+
+studentSchema.pre('save', async function(next){
+  const user = this
+
+   user.password = await bcrypt.hash(
+    user.password,Number(config.bcrypt_salt_rounds));
+    next()
+})
+studentSchema.post('save', function(doc,next){
+ 
+  doc.password = ''
+  next()
+})
+
+// query delte
+studentSchema.pre('find', function(next){
+  this.find({isDeleted: {$ne:true } })
+  next()
+})
+studentSchema.pre('findOne', function(next){
+  this.find({isDeleted: {$ne:true } })
+  next()
+})
+studentSchema.pre('aggregate', function(next){
+  this.pipeline().unshift({$match: {isDeleted: {$ne:true}}})
+  next()
+})
+
+
+
+
 
 // creating a custom static method
 

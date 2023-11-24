@@ -45,8 +45,12 @@ const getAllStudents = async (req: Request, res:Response) =>{
       message: "student is created",
       data: result,
     });
-  } catch (error) {
-    console.log(error)
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "student is worng error",
+      error: error,
+    });
   }
 }
 const getSingleStudents = async (req: Request, res:Response) =>{
@@ -66,9 +70,27 @@ const getSingleStudents = async (req: Request, res:Response) =>{
     });
   }
 }
+const deleteStudents = async (req: Request, res:Response) =>{
+  try {
+    const {studentId} = req.params
+    const result = await StudentServices.deleteStudentsFromDB(studentId)
+    res.status(200).json({
+      success: true,
+      message: "student is created",
+      data: result,
+    });
+  } catch (error:any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || "student is worng error",
+      error: error,
+    });
+  }
+}
 
 export const StudentController = {
   createStudent,
   getAllStudents,
-  getSingleStudents
+  getSingleStudents,
+  deleteStudents
 };

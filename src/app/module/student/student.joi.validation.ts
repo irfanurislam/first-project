@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { join } from 'path';
 
 const userNameValidationSchema = Joi.object({
   firstName: Joi.string().required().max(20),
@@ -37,6 +38,8 @@ const studentValidationSchema = Joi.object({
   localGuardian: localGuardianValidationSchema.required(),
   profileImage: Joi.string().required(),
   isActive: Joi.string().valid('active', 'blocked').default('active'),
+  isDeleted: Joi.boolean(),
+  
 });
 
 export default studentValidationSchema;

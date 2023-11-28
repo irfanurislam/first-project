@@ -9,7 +9,7 @@ import {
   StudentModel,
   
 } from "./student/student.interface";
-import bcrypt from 'bcrypt';
+
 import { boolean } from "joi";
 // import { config } from "dotenv";
 
@@ -90,8 +90,14 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
   id: { type: String , required:true, unique:true},
-  password: { type: String , required:true, maxlength:[20,'password cannot length 20 ']},
-  name: userSchema,
+  user:{
+   type:Schema.Types.ObjectId,
+   required:[true,'user id is requiered'],
+   unique:true,
+   ref:'user',
+  },
+  // password: { type: String , required:true, maxlength:[20,'password cannot length 20 ']},
+  // name: userSchema,
   gender:{
     type: String,
     enum: {
@@ -146,11 +152,11 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     type: String,
     required: true,
   },
-  isActive: {
-    type:String,
-    enum:["active", "blocked"],
-    default:'active'
-  },
+  // isActive: {
+  //   type:String,
+  //   enum:["active", "blocked"],
+  //   default:'active'
+  // },
   isDeleted:{
     type: Boolean,
     default: false
@@ -165,18 +171,7 @@ studentSchema.virtual('fullname').get(function() {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`
 })
 
-studentSchema.pre('save', async function(next){
-  const user = this
 
-   user.password = await bcrypt.hash(
-    user.password,Number(config.bcrypt_salt_rounds));
-    next()
-})
-studentSchema.post('save', function(doc,next){
- 
-  doc.password = ''
-  next()
-})
 
 // query delte
 studentSchema.pre('find', function(next){

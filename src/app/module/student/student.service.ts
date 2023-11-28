@@ -2,29 +2,29 @@ import { error } from "console";
 import { Student } from "../student.module";
 import { TStudent } from "./student.interface";
 
-const createStudentIntoDB = async (studentData: TStudent) => {
+// const createStudentIntoDB = async (studentData: TStudent) => {
 
   
- if(await Student.isUserExists(studentData.id)){
-    throw new Error('new already exits')
-  }
+//  if(await Student.isUserExists(studentData.id)){
+//     throw new Error('new already exits')
+//   }
 
-  const result = await Student.create(studentData);
+//   const result = await Student.create(studentData);
 
-  // static method
+//   // static method
  
-  // instance method
-  // const student = new Student(studentData);
-  // if(await student.isUserExists(studentData.id)) {
-  //   throw new Error('user already exits')
-  // }
+//   // instance method
+//   // const student = new Student(studentData);
+//   // if(await student.isUserExists(studentData.id)) {
+//   //   throw new Error('user already exits')
+//   // }
   
-  // const result = await student.save()
+//   // const result = await student.save()
 
 
 
-  return result;
-};
+//   return result;
+// };
 
 
 
@@ -44,7 +44,7 @@ const deleteStudentsFromDB = async(id:string) =>{
   return result
 }
 export const StudentServices = {
-  createStudentIntoDB,
+  
   getAllStudentsFromDB,
   getSingleStudentsFromDB,
   deleteStudentsFromDB

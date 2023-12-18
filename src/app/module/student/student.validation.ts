@@ -29,7 +29,7 @@ export const createStudenValidationtSchema = z.object({
     student:z.object({
       name: userNameValidationSchema,
     gender: z.enum(['male', 'female', 'other']),
-    dateOfBirth: z.date().optional(),
+    dateOfBirth: z.string().optional(),
     email: z.string().email(),
     contactNo: z.string().min(1),
     emergencyContactNo: z.string().min(1),
@@ -38,6 +38,7 @@ export const createStudenValidationtSchema = z.object({
     permanentAddress: z.string().min(1),
     guardian: guardianValidationSchema,
     localGuardian: localGuardianValidationSchema,
+    admissionSmester:z.string(),
     profileImage: z.string().min(1),
     })
     // isActive: z.enum(['active', 'blocked']),

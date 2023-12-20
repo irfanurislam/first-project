@@ -39,6 +39,7 @@ export const createStudenValidationtSchema = z.object({
     guardian: guardianValidationSchema,
     localGuardian: localGuardianValidationSchema,
     admissionSmester:z.string(),
+    academicDepartment:z.string(),
     profileImage: z.string().min(1),
     })
     // isActive: z.enum(['active', 'blocked']),

@@ -5,6 +5,7 @@ import { UserRoutes } from '../module/user/user.route'
 import { academicSemesterRoutes } from '../module/academicSemester/academicSemester.route'
 import { academicFacultyRoutes } from '../module/academicFaculty/academicFaculty.route'
 import { academicDepartmentRoutes } from '../module/academicDepartment/academicDepartment.route'
+import { CourseRoutes } from '../module/Course/course.route'
 
 const router = Router()
 
@@ -29,7 +30,11 @@ const moduleRoutes=[
     {
         path:'/academic-departments',
         route:academicDepartmentRoutes,
-    }
+    },
+    {
+        path: '/courses',
+        route: CourseRoutes,
+      },
 ]
 
 moduleRoutes.forEach(route => router.use(route.path,route.route))

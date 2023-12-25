@@ -3,51 +3,67 @@ import { CourseSearchableFields } from "./course.constant";
 import { TCourse } from "./course.interface";
 import { Course } from "./course.model";
 
-const createCourseIntoDB = async(payload:TCourse) =>{
-    const result = await Course.create(payload);
-    return result
+const createCourseIntoDB = async (payload: TCourse) => {
+  const result = await Course.create(payload);
+  return result;
+};
 
-
-}
-
-const getALlCoursesFromDB = async(query:Record<string,unknown>) =>{ 
-    const courseQuery = new QueryBuilder(Course.find().populate('preRequisiteCourses.course'),query)
+const getALlCoursesFromDB = async (query: Record<string, unknown>) => {
+  const courseQuery = new QueryBuilder(
+    Course.find().populate("preRequisiteCourses.course"),
+    query
+  )
     .search(CourseSearchableFields)
     .filter()
     .sort()
     .paginate()
-    .fields()
-    const result = await courseQuery.modelQuery;
-    return result
-}
-const getSingleCourseFromDB = async(id:string) =>{
-   
-    const result = await Course.findById(id).populate('preRequisiteCourses.course');
-    return result
-}
+    .fields();
+  const result = await courseQuery.modelQuery;
+  return result;
+};
+const getSingleCourseFromDB = async (id: string) => {
+  const result = await Course.findById(id).populate(
+    "preRequisiteCourses.course"
+  );
+  return result;
+};
 
-const updateCourseIntoDB = async(id:string,payload:Partial<TCourse>)=>{
-    const {preRequisiteCourses, ...courseRemainingData} = payload
+const updateCourseIntoDB = async (id: string, payload: Partial<TCourse>) => {
+  const { preRequisiteCourses, ...courseRemainingData } = payload;
 
-    const updateBasicCourseInfo = await Course.findByIdAndUpdate(
-        id,
-        courseRemainingData,
-        {
-            new:true,
-            runValidators:true
-        }
-    );
-    return updateBasicCourseInfo
-}
-const deleteCourseFromDB = async(id:string) =>{
-    const result = await Course.findByIdAndUpdate(id, {isDeleted:true},{new:true});
-    return result
-}
+  const updateBasicCourseInfo = await Course.findByIdAndUpdate(
+    id,
+    courseRemainingData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+  if (preRequisiteCourses && preRequisiteCourses.length > 0) {
+    const deletedPreRequisites = preRequisiteCourses.filter(
+      (el) => el.course && el.isDeleted)
+      .map((el) => el.course);
+
+      const deletedPreRequisiteCourses = await Course.findByIdAndDelete(id,{
+        $pull:{preRequisiteCourses:{course:{$in:deletedPreRequisites}}},
+      });
+  }
+
+  return updateBasicCourseInfo;
+};
+const deleteCourseFromDB = async (id: string) => {
+  const result = await Course.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  );
+  return result;
+};
 
 export const CourseServices = {
-    createCourseIntoDB,
-    getALlCoursesFromDB,
-    getSingleCourseFromDB,
-    updateCourseIntoDB,
-    deleteCourseFromDB
-}
+  createCourseIntoDB,
+  getALlCoursesFromDB,
+  getSingleCourseFromDB,
+  updateCourseIntoDB,
+  deleteCourseFromDB,
+};

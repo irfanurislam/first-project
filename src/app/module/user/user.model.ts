@@ -1,10 +1,10 @@
 import { string } from "joi";
 import { Schema, model } from "mongoose";
-import { TUser } from "./user.interface";
+import { TUser, UserModel } from "./user.interface";
 import config from "../../config";
 import bcrypt from 'bcrypt';
 
-const userSchema = new Schema <TUser>({
+const userSchema = new Schema <TUser ,UserModel> ({
     id:{
         type: String,
         required:true,
@@ -54,6 +54,14 @@ userSchema.pre('save', async function(next){
   })
 
 
+  userSchema.statics.isUserExistsByCustomId = async function(id:string){
+
+    return await User.findOne({id});
+  }
+
+userSchema.statics.isPasswordMatch = async function(plainTextPassword,hashedPassword){
+    return await bcrypt.compare(plainTextPassword,hashedPassword)
+}
 
 
 
@@ -61,6 +69,4 @@ userSchema.pre('save', async function(next){
 
 
 
-
-
-export const User = model <TUser>('User', userSchema);
+export const User = model <TUser, UserModel>('User', userSchema);

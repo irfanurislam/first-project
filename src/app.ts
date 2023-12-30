@@ -5,13 +5,15 @@ import { UserRoutes } from "./app/module/user/user.route";
 import { globalErrorHandler } from "./app/middleware/globalErrorHandler";
 import notFound from "./app/middleware/notFound";
 import router from "./app/routes";
+import cookieParser from "cookie-parser";
 const app: Application = express();
 // NODE_ENV=development
 //PORT=5000
 //DATABASE_URL = mongodb+srv://admin_um:aqpFcxXOJvBOPJP1@cluster0.psezczp.mongodb.net/first-project?retryWrites=true&w=majority
 // parser
 app.use(express.json());
-app.use(cors());
+app.use(cookieParser());
+app.use(cors({origin:['http://localhost:3000']}));
 
 // app.use("/api/v1/students", StudentRoutes);
 // app.use("/api/v1/users", UserRoutes);

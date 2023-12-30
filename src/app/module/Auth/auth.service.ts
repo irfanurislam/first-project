@@ -149,6 +149,8 @@ const refreshToken = async (token: string) => {
 
   return {
     accessToken,
+    refreshToken,
+    needsPasswordChange: user.needsPasswordChange
   };
 };
 

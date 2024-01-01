@@ -7,7 +7,7 @@ import { UserService } from './user.service';
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body;
 
-  const result = await UserService.createStudentIntoDB(password, studentData);
+  const result = await UserService.createStudentIntoDB(  req.file,password, studentData);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -30,18 +30,18 @@ const createFaculty = catchAsync(async (req, res) => {
   });
 });
 
-// const createAdmin = catchAsync(async (req, res) => {
-//   const { password, admin: adminData } = req.body;
+const createAdmin = catchAsync(async (req, res) => {
+  const { password, admin: adminData } = req.body;
 
-//   const result = await UserService.createAdminIntoDB(password, adminData);
+  const result = await UserService.createAdminIntoDB(password, adminData);
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Admin is created succesfully',
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin is created succesfully',
+    data: result,
+  });
+});
 
 
 const getMe = catchAsync(async (req, res) => {
@@ -63,11 +63,24 @@ const getMe = catchAsync(async (req, res) => {
   });
 });
 
+const changeStatus = catchAsync(async (req, res) => {
+  const id = req.params.id;
+
+  const result = await UserService.changeStatus(id, req.body);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Status is updated succesfully',
+    data: result,
+  });
+});
 
 
 export const UserControllers = {
   createStudent,
   createFaculty,
-  getMe
-  // createAdmin,
+  getMe,
+  changeStatus,
+   createAdmin,
 };
